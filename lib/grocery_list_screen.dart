@@ -3,8 +3,6 @@ import 'grocery_cubit.dart';
 import 'grocery_item.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-
-
 class GroceryListScreen extends StatelessWidget {
   GroceryListScreen({super.key});
   final TextEditingController _nameController = TextEditingController();
@@ -24,7 +22,62 @@ class GroceryListScreen extends StatelessWidget {
     }
   }
 
+  void _editGroceryItem(BuildContext context, int index, GroceryItem item) {
+    _nameController.text = item.name;
+    _quantityController.text = item.quantity.toString();
 
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Edit Grocery Item'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: _nameController,
+                decoration: const InputDecoration(labelText: 'Name'),
+              ),
+              TextField(
+                controller: _quantityController,
+                decoration: const InputDecoration(labelText: 'Quantity'),
+                keyboardType: TextInputType.number,
+              )
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                final String name = _nameController.text;
+                final String quantityStr = _quantityController.text;
+
+                if (name.isNotEmpty && quantityStr.isNotEmpty) {
+                  final int quantity = int.tryParse(quantityStr) ?? 0;
+                  final updatedItem =
+                      GroceryItem(name: name, quantity: quantity);
+                  context
+                      .read<GroceryCubit>()
+                      .updateGroceryItem(index, updatedItem);
+                }
+                _nameController.clear();
+                _quantityController.clear();
+                Navigator.of(context).pop();
+              },
+              child: const Text('Save'),
+            ),
+            TextButton(
+              onPressed: () {
+                _nameController.clear();
+                _quantityController.clear();
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,32 +93,34 @@ class GroceryListScreen extends StatelessWidget {
               child: BlocBuilder<GroceryCubit, List<GroceryItem>>(
                 builder: (context, groceryList) {
                   return ListView.builder(
-                itemCount: groceryList.length,
-                itemBuilder: (context, index) {
-                  final item = groceryList[index];
-                  return ListTile(
-                    title: Text('${item.name}'),
-                    subtitle: Text('Quantity: ${item.quantity}'),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.edit),
-                          onPressed: () {
-                            // Placeholder for edit functionality
-                          },
+                    itemCount: groceryList.length,
+                    itemBuilder: (context, index) {
+                      final item = groceryList[index];
+                      return ListTile(
+                        title: Text(item.name),
+                        subtitle: Text('Quantity: ${item.quantity}'),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.edit),
+                              onPressed: () {
+                                _editGroceryItem(context, index, item);
+                              },
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete),
+                              onPressed: () => {
+                                context
+                                    .read<GroceryCubit>()
+                                    .removeGroceryItem(index)
+                              },
+                            ),
+                          ],
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: () => {
-                            context.read<GroceryCubit>().removeGroceryItem(index);
-                          },
-                        ),
-                      ],
-                    ),
+                      );
+                    },
                   );
-                },
-                );
                 },
               ),
             ),
