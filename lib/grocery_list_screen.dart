@@ -12,7 +12,7 @@ class GroceryListScreen extends StatefulWidget {
 class _GroceryListScreenState extends State<GroceryListScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _quantityController = TextEditingController();
-  final List<Map<String, dynamic>> _groceryList = [];
+  List<Map<String, dynamic>> _groceryList = [];
 
   void _addGroceryItem() {
     final String name = _nameController.text;
@@ -26,6 +26,13 @@ class _GroceryListScreenState extends State<GroceryListScreen> {
       _nameController.clear();
       _quantityController.clear();
     }
+  }
+
+  void _deleteGroceryItem(int index) {
+    var _updated_list = _groceryList.removeAt(index);
+    setState(() {
+      _groceryList = _updated_list;
+    });
   }
 
   @override
@@ -57,9 +64,7 @@ class _GroceryListScreenState extends State<GroceryListScreen> {
                         ),
                         IconButton(
                           icon: const Icon(Icons.delete),
-                          onPressed: () {
-                            // Placeholder for delete functionality
-                          },
+                          onPressed: () => _deleteGroceryItem(index),
                         ),
                       ],
                     ),
