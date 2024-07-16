@@ -40,10 +40,12 @@ class _GroceryListScreenState extends State<GroceryListScreen> {
           children: [
             Expanded(
               child: ListView.builder(
-                itemCount: 0, // Placeholder for now
+                itemCount: _groceryList.length,
                 itemBuilder: (context, index) {
+                  final item = _groceryList[index];
                   return ListTile(
-                    title: const Text('Placeholder Item'),
+                    title: Text('${item['name']}'),
+                    subtitle: Text('Quantity: ${item['quantity']}'),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
