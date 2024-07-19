@@ -17,4 +17,16 @@ class GroceryItem {
       quantity: map['quantity'],
     );
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is GroceryItem &&
+        other.name == name &&
+        other.quantity == quantity;
+  }
+
+  @override
+  int get hashCode => name.hashCode ^ quantity.hashCode;
 }
