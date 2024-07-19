@@ -22,12 +22,13 @@ class GroceryListScreen extends StatelessWidget {
     }
   }
 
-  void _editGroceryItem(BuildContext context, int index, GroceryItem item) {
+  void _editGroceryItem(
+      BuildContext parentContext, int index, GroceryItem item) {
     _nameController.text = item.name;
     _quantityController.text = item.quantity.toString();
 
     showDialog(
-      context: context,
+      context: parentContext,
       builder: (context) {
         return AlertDialog(
           title: const Text('Edit Grocery Item'),
@@ -55,7 +56,7 @@ class GroceryListScreen extends StatelessWidget {
                   final int quantity = int.tryParse(quantityStr) ?? 0;
                   final updatedItem =
                       GroceryItem(name: name, quantity: quantity);
-                  context
+                  parentContext
                       .read<GroceryCubit>()
                       .updateGroceryItem(index, updatedItem);
                 }
