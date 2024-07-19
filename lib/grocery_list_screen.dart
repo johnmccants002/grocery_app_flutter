@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'grocery_cubit.dart';
 import 'grocery_item.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'profile_screen.dart';
 
 class GroceryListScreen extends StatelessWidget {
   GroceryListScreen({super.key});
@@ -85,6 +86,19 @@ class GroceryListScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Grocery List'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.account_circle),
+            onPressed: () {
+              // Handle profile icon press
+              // For example, navigate to the profile page
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ProfileScreen()),
+              );
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
